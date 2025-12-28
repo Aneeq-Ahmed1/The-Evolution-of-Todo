@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m src.todo.main --help)",
+      "Bash(python -m src.todo.main list)",
+      "Bash(python -m src.todo.main add \"Second task\" \"Another persistent task\")",
+      "Bash(python -m src.todo.main complete 1)",
+      "Bash(python -m src.todo.main update 2 --title \"Updated Second Task\" --description \"Updated description\")",
+      "Bash(python -m src.todo.main delete 2)",
+      "Bash(git fetch --all --prune)"
+    ]
+  }
+}

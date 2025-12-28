@@ -1,0 +1,15 @@
+[project]
+name = "todo-cli"
+version = "0.1.0"
+description = "In-Memory Todo Console Application"
+authors = [{name = "User", email = "user@example.com"}]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+todo = "src.todo.main:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
