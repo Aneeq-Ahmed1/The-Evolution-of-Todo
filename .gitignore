@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+nul
+NUL
+
+>>>>>>> 12e9d13 (chore: ignore Windows nul device file)
 # Python
 __pycache__/
 *.pyc
