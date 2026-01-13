@@ -75,3 +75,11 @@ docs/_build/
 # Project specific
 *.log
 *.tmp
+
+# Next.js
+.next/
+out/
+
+# Node
+node_modules/
+.env*
