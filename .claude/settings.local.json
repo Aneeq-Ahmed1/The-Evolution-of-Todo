@@ -7,7 +7,9 @@
       "Bash(python -m src.todo.main complete 1)",
       "Bash(python -m src.todo.main update 2 --title \"Updated Second Task\" --description \"Updated description\")",
       "Bash(python -m src.todo.main delete 2)",
-      "Bash(git fetch --all --prune)"
+      "Bash(pip install -e .)",
+      "Bash(uv sync)",
+      "Bash(python -c \"from main import app; print\\(''Import successful''\\)\")"
     ]
   }
 }
