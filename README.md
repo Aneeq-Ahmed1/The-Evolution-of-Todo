@@ -1,3 +1,13 @@
+---
+title: Todo
+emoji: 🌍
+colorFrom: gray
+colorTo: purple
+sdk: docker
+pinned: false
+short_description: Todo
+---
+
 # Todo Application - Phase 1 & Phase 2
 
 A comprehensive todo application with both console and web interfaces. Phase 1 provides a command-line interface, while Phase 2 offers a web application with authentication and database persistence.
