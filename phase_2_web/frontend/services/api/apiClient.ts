@@ -1,7 +1,8 @@
 // frontend/services/api/apiClient.ts
 import { authService } from './authService';
 
-const API_BASE_URL = 'http://localhost:8000';
+// const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://aaneeq-todo.hf.space/api'
 
 class ApiClient {
   private baseUrl: string;
