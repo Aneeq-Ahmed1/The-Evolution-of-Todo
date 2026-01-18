@@ -121,7 +121,7 @@ app.add_middleware(
 
 # Include routes
 app.include_router(tasks.router, prefix="/api", tags=["tasks"])
-app.include_router(auth.router, tags=["auth"])
+app.include_router(auth.router, prefix="/api", tags=["auth"])
 
 
 # Root endpoint for health check
