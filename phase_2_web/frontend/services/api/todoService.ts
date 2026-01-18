@@ -20,7 +20,7 @@ const getCurrentUserId = (): string => {
 export const todoService = {
   async getAllTodos(): Promise<TodoItem[]> {
     const userId = getCurrentUserId();
-    const response = await apiClient.request(`/api/${userId}/tasks`);
+    const response = await apiClient.request(`/${userId}/tasks`);
     return response.map((todo: any) => ({
       ...todo,
       createdAt: new Date(todo.created_at || todo.createdAt),
@@ -30,7 +30,7 @@ export const todoService = {
 
   async createTodo(title: string, description?: string): Promise<TodoItem> {
     const userId = getCurrentUserId();
-    const response = await apiClient.request(`/api/${userId}/tasks`, {
+    const response = await apiClient.request(`/${userId}/tasks`, {
       method: 'POST',
       body: JSON.stringify({ title, description }),
     });
@@ -43,7 +43,7 @@ export const todoService = {
 
   async updateTodo(id: string, updates: Partial<TodoItem>): Promise<TodoItem> {
     const userId = getCurrentUserId();
-    const response = await apiClient.request(`/api/${userId}/tasks/${id}`, {
+    const response = await apiClient.request(`/${userId}/tasks/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updates),
     });
@@ -57,14 +57,14 @@ export const todoService = {
 
   async deleteTodo(id: string): Promise<void> {
     const userId = getCurrentUserId();
-    await apiClient.request(`/api/${userId}/tasks/${id}`, {
+    await apiClient.request(`/${userId}/tasks/${id}`, {
       method: 'DELETE',
     });
   },
 
   async toggleTodoCompletion(id: string): Promise<TodoItem> {
     const userId = getCurrentUserId();
-    const response = await apiClient.request(`/api/${userId}/tasks/${id}/complete`, {
+    const response = await apiClient.request(`/${userId}/tasks/${id}/complete`, {
       method: 'PATCH',
       body: JSON.stringify({}), // Backend toggles the completion status without needing explicit value
     });
