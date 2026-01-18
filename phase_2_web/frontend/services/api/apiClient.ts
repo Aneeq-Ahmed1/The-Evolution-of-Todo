@@ -1,8 +1,8 @@
 // frontend/services/api/apiClient.ts
 import { authService } from './authService';
 
-// Base URL without the /api suffix since we'll handle prefixes dynamically
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://aaneeq-todo.hf.space';
+// Base URL with the /api suffix since all routes now have the /api prefix
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://aaneeq-todo.hf.space/api';
 
 class ApiClient {
   private baseUrl: string;
@@ -12,11 +12,7 @@ class ApiClient {
   }
 
   async request(endpoint: string, options: RequestInit = {}) {
-    // Determine if this is an auth endpoint that shouldn't have /api prefix
-    const isAuthEndpoint = endpoint.startsWith('/auth/');
-    const url = isAuthEndpoint
-      ? `${this.baseUrl}${endpoint}`
-      : `${this.baseUrl}/api${endpoint}`;
+    const url = `${this.baseUrl}${endpoint}`;
 
     // Check if body is FormData to avoid setting Content-Type header
     const isFormData = options.body instanceof FormData;
