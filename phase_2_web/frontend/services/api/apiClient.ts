@@ -2,7 +2,7 @@
 import { authService } from './authService';
 
 // Base URL with the /api suffix since all routes now have the /api prefix
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://aaneeq-todo.hf.space/api';
 
 class ApiClient {
   private baseUrl: string;
