@@ -1,8 +1,8 @@
 // frontend/services/api/apiClient.ts
 import { authService } from './authService';
 
-// const API_BASE_URL = 'http://localhost:8000';
-const API_BASE_URL = 'https://aaneeq-todo.hf.space/api'
+// Base URL without the /api suffix since we'll handle prefixes dynamically
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://aaneeq-todo.hf.space';
 
 class ApiClient {
   private baseUrl: string;
@@ -12,7 +12,11 @@ class ApiClient {
   }
 
   async request(endpoint: string, options: RequestInit = {}) {
-    const url = `${this.baseUrl}${endpoint}`;
+    // Determine if this is an auth endpoint that shouldn't have /api prefix
+    const isAuthEndpoint = endpoint.startsWith('/auth/');
+    const url = isAuthEndpoint
+      ? `${this.baseUrl}${endpoint}`
+      : `${this.baseUrl}/api${endpoint}`;
 
     // Check if body is FormData to avoid setting Content-Type header
     const isFormData = options.body instanceof FormData;
@@ -59,7 +63,9 @@ class ApiClient {
       if (response.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
         throw new Error('Unauthorized. Please log in again.');
       }
 
