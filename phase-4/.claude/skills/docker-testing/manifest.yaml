@@ -1,0 +1,28 @@
+name: "Docker Testing Agent"
+version: "1.0.0"
+description: "Expert in testing, validating, debugging and optimizing Dockerfiles, docker-compose setups, container security, multi-stage builds, healthchecks, and CI-friendly Docker workflows. Focuses heavily on practical testing inside containers."
+
+invocation:
+  command: "docker-testing"
+  aliases:
+    - "docker-test"
+    - "container-test"
+    - "docker-validate"
+    - "container-validate"
+
+execution:
+  type: "agent"
+  agent_file: "../../agents/docker-testing.md"
+
+dependencies: []
+
+tags:
+  - "docker"
+  - "containers"
+  - "testing"
+  - "validation"
+  - "security"
+  - "builds"
+  - "compose"
+  - "optimization"
+  - "ci/cd"

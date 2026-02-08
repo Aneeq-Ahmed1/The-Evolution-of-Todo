@@ -1,0 +1,219 @@
+openapi: 3.0.0
+info:
+  title: AI Agent Platform API
+  version: 1.0.0
+  description: API for interacting with the AI agent platform
+
+servers:
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  /api/chat:
+    post:
+      summary: Send a message to the AI agent
+      description: Sends a user message to the AI agent and returns the response
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  description: The user's message to the agent
+                  example: "Can you help me create a todo?"
+                conversation_id:
+                  type: string
+                  description: Optional existing conversation ID
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                user_context:
+                  type: object
+                  description: Additional context about the user
+                  properties:
+                    timezone:
+                      type: string
+                      example: "America/New_York"
+      responses:
+        '200':
+          description: Successful response from the AI agent
+          content:
+            application/json:
+              schema:
+              type: object
+              properties:
+                response:
+                  type: string
+                  description: The agent's response to the user
+                  example: "Sure! I can help you create a todo. What would you like to add?"
+                conversation_id:
+                  type: string
+                  description: The conversation ID (new or existing)
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                metadata:
+                  type: object
+                  description: Additional metadata about the response
+                  properties:
+                    agent_used:
+                      type: string
+                      example: "orchestrator"
+                    tools_used:
+                      type: array
+                      items:
+                        type: string
+                      example: ["intent_classification"]
+        '400':
+          description: Bad request - invalid input
+        '401':
+          description: Unauthorized - invalid or missing token
+        '500':
+          description: Internal server error
+
+  /api/conversations:
+    get:
+      summary: List user's conversations
+      description: Retrieve a list of conversations for the authenticated user
+      responses:
+        '200':
+          description: List of conversations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  conversations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Conversation'
+        '401':
+          description: Unauthorized - invalid or missing token
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Create a new conversation
+      description: Start a new conversation with the AI agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initial_message:
+                  type: string
+                  description: Optional initial message for the conversation
+                metadata:
+                  type: object
+                  description: Optional metadata for the conversation
+      responses:
+        '201':
+          description: New conversation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        '401':
+          description: Unauthorized - invalid or missing token
+        '500':
+          description: Internal server error
+
+  /api/conversations/{id}:
+    get:
+      summary: Get a specific conversation
+      description: Retrieve a specific conversation by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The conversation ID
+      responses:
+        '200':
+          description: Conversation details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        '401':
+          description: Unauthorized - invalid or missing token
+        '404':
+          description: Conversation not found
+        '500':
+          description: Internal server error
+
+  /api/health:
+    get:
+      summary: Health check
+      description: Check the health status of the API
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2023-10-01T12:00:00Z"
+
+components:
+  schemas:
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          example: "Todo management discussion"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-10-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-10-01T12:05:00Z"
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174001"
+        role:
+          type: string
+          enum: [user, assistant, system, tool]
+          example: "user"
+        content:
+          type: string
+          example: "Can you help me create a todo?"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2023-10-01T12:00:00Z"
+        tool_calls:
+          type: array
+          items:
+            type: object
+          example: []
+        tool_response:
+          type: object
+          example: null

@@ -1,0 +1,28 @@
+name: "FastAPI Backend Expert"
+version: "1.0.0"
+description: "Specializes in developing, optimizing, and troubleshooting FastAPI applications. Provides expertise on API design, database integration, authentication, performance optimization, and best practices for Python web development."
+
+invocation:
+  command: "fastapi-backend-expert"
+  aliases:
+    - "fastapi-expert"
+    - "backend-expert"
+    - "api-expert"
+    - "fastapi-advisor"
+
+execution:
+  type: "agent"
+  agent_file: "../../agents/fastapi-backend-expert.md"
+
+dependencies: []
+
+tags:
+  - "fastapi"
+  - "python"
+  - "backend"
+  - "api"
+  - "web-development"
+  - "rest-api"
+  - "authentication"
+  - "database"
+  - "performance"
