@@ -1,0 +1,66 @@
+Thank you for installing {{ .Chart.Name }}!
+
+Your release "{{ .Release.Name }}" has been deployed to namespace: {{ .Release.Namespace }}
+
+{{- if .Values.ingress.enabled }}
+Application URL(s):
+{{- range $host := .Values.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+  {{- end }}
+{{- end }}
+{{- else }}
+Get the application URL by running these commands:
+
+# For Frontend:
+export FRONTEND_POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "todo-app.name" . }},app.kubernetes.io/component=frontend" -o jsonpath="{.items[0].metadata.name}")
+export FRONTEND_CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $FRONTEND_POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+echo "Visit http://127.0.0.1:8080 to use your application"
+kubectl --namespace {{ .Release.Namespace }} port-forward $FRONTEND_POD_NAME 8080:$FRONTEND_CONTAINER_PORT
+
+# For Backend API:
+export BACKEND_POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "todo-app.name" . }},app.kubernetes.io/component=backend" -o jsonpath="{.items[0].metadata.name}")
+export BACKEND_CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $BACKEND_POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+kubectl --namespace {{ .Release.Namespace }} port-forward $BACKEND_POD_NAME 8000:$BACKEND_CONTAINER_PORT
+{{- end }}
+
+# Check the status of pods:
+kubectl --namespace {{ .Release.Namespace }} get pods
+
+# Check logs for backend:
+kubectl --namespace {{ .Release.Namespace }} logs -l "app.kubernetes.io/name={{ include "todo-app.name" . }},app.kubernetes.io/component=backend"
+
+# Check logs for frontend:
+kubectl --namespace {{ .Release.Namespace }} logs -l "app.kubernetes.io/name={{ include "todo-app.name" . }},app.kubernetes.io/component=frontend"
+
+# Admin Panel Access:
+Admin Email: {{ .Values.backend.env.ADMIN_EMAIL }}
+Admin Password: Check your secrets or values file
+
+# Default User Credentials (if created):
+Default User: demo@taskflow.com
+Default Password: NewDemo@456
+
+{{- if .Values.postgresql.enabled }}
+# PostgreSQL Connection:
+Database: {{ .Values.postgresql.auth.database }}
+Username: {{ .Values.postgresql.auth.username }}
+Host: {{ include "todo-app.postgresql.serviceName" . }}
+Port: {{ .Values.postgresql.service.ports.postgresql }}
+{{- end }}
+
+{{- if contains "NodePort" .Values.frontend.service.type }}
+export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "todo-app.frontend.serviceName" . }})
+export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.frontend.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "todo-app.frontend.serviceName" . }}'
+export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "todo-app.frontend.serviceName" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+echo http://$SERVICE_IP:{{ .Values.frontend.service.port }}
+{{- else if contains "ClusterIP" .Values.frontend.service.type }}
+You can connect to the frontend service from inside the cluster using:
+  {{ include "todo-app.frontend.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.frontend.service.port }}
+{{- end }}
+
+For more information on the application, visit: {{ .Chart.Home }}

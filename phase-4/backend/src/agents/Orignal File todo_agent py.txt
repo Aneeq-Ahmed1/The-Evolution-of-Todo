@@ -1,0 +1,505 @@
+"""
+AI Agent for the Todo Chatbot - processes natural language and executes MCP tools.
+"""
+from typing import Dict, Any, List
+import re
+from sqlmodel import Session
+from ..mcp.server import mcp_server
+from ..services.ordinal_resolver import ordinal_resolver
+from ..services.mapping_service import mapping_service
+from ..services.task_service import get_user_tasks
+
+
+class TodoAgent:
+    def __init__(self, session: Session):
+        self.session = session
+        self.mcp_server = mcp_server
+        self.ordinal_resolver = ordinal_resolver
+        self.mapping_service = mapping_service
+
+    def process_message(self, user_id: str, message: str) -> str:
+        """
+        Process a user message and return an AI response.
+        """
+        # Parse the message to determine intent
+        intent, params = self._parse_intent(message, user_id)
+
+        if intent == "add_task":
+            return self._handle_add_task(params)
+        elif intent == "list_tasks":
+            return self._handle_list_tasks(params)
+        elif intent == "complete_task":
+            return self._handle_complete_task(params)
+        elif intent == "delete_task":
+            return self._handle_delete_task(params)
+        elif intent == "update_task":
+            return self._handle_update_task(params)
+        elif intent == "task_selection":
+            return self._handle_task_selection(params)
+        elif intent == "complete_task_menu":
+            return self._handle_complete_task_menu(params)
+        elif intent == "incomplete_task_menu":
+            return self._handle_incomplete_task_menu(params)
+        elif intent == "edit_task_menu":
+            return self._handle_edit_task_menu(params)
+        elif intent == "delete_task_menu":
+            return self._handle_delete_task_menu(params)
+        elif intent == "mark_incomplete":
+            return self._handle_mark_incomplete(params)
+        elif intent == "ask_for_clarification":
+            return params.get("message", "I'm not sure what you mean. You can ask me to add, list, complete, delete, or update tasks.")
+        else:
+            return "I'm not sure what you mean. You can ask me to add, list, complete, delete, or update tasks."
+
+    def _parse_intent(self, message: str, user_id: str) -> tuple:
+        """
+        Parse the user message to determine the intent and extract parameters.
+        """
+        message_lower = message.lower().strip()
+
+        # Check for ordinal references first (e.g., "task 1 is complete", "edit task 2")
+        ordinal_result = self.ordinal_resolver.parse_ordinal_command(message_lower)
+        if ordinal_result:
+            display_index = ordinal_result["display_index"]
+            action = ordinal_result["action"]
+
+            # Get the user's tasks to validate the display index
+            from ..models.task import Task
+            from sqlmodel import select
+            tasks = get_user_tasks(self.session, int(user_id))
+
+            # Validate the display index
+            is_valid, error_msg = self.mapping_service.validate_display_index(str(user_id), display_index, tasks)
+
+            if not is_valid:
+                return "ask_for_clarification", {"message": f"{error_msg}"}
+
+            # Resolve the display index to a task ID
+            task_id = self.mapping_service.resolve_display_index(str(user_id), display_index)
+            if not task_id:
+                return "ask_for_clarification", {"message": f"I couldn't find a task at position {display_index}."}
+
+            # Map the action to the appropriate intent
+            if action == "complete":
+                return "complete_task", {"user_id": user_id, "task_id": int(task_id)}
+            elif action == "delete":
+                return "delete_task", {"user_id": user_id, "task_id": int(task_id)}
+            elif action in ["edit", "update", "change", "modify", "rename"]:
+                return "ask_for_clarification", {"message": f"You selected task #{display_index} to edit. Please provide the new title for this task."}
+            elif action in ["uncomplete", "incomplete", "not done", "not finished"]:
+                # Mark as incomplete
+                return "mark_incomplete", {"user_id": user_id, "task_id": int(task_id)}
+
+        # Add task intent
+        add_patterns = [r"add\s+(.*)", r"create\s+(.*)", r"remember\s+(.*)", r"don't\s+forget\s+(.*)"]
+        for pattern in add_patterns:
+            match = re.search(pattern, message_lower)
+            if match:
+                task_text = match.group(1).strip()
+                # Extract title and potential description
+                title = task_text
+                description = None
+                # Simple logic to separate title and description if user provides both
+                if "description" in task_text or "desc" in task_text:
+                    # This is a simple approach - in a real implementation, you'd have more sophisticated parsing
+                    pass
+                return "add_task", {"user_id": user_id, "title": title, "description": description}
+
+        # List tasks intent
+        list_patterns = [r"show\s+.*task", r"list\s+.*task", r"what\s+.*have", r"my\s+task", r"what's\s+next"]
+        for pattern in list_patterns:
+            if re.search(pattern, message_lower):
+                # Check if user specified status
+                status = None
+                if "pending" in message_lower or "incomplete" in message_lower:
+                    status = "pending"
+                elif "completed" in message_lower or "done" in message_lower:
+                    status = "completed"
+                elif "all" in message_lower:
+                    status = "all"
+                return "list_tasks", {"user_id": user_id, "status": status}
+
+        # Complete task intent
+        complete_patterns = [
+            (r"(complete|done|finish)\s+task\s+(\d+)", 2),  # Handle "complete task 1" pattern - task number in group 2
+            (r"(complete|done|finish)\s+#(\d+)", 2),       # Handle "complete #1" pattern - task number in group 2
+            (r"task\s+(\d+)\s+is\s+(done|completed|finished)", 1),  # Handle "task 1 is done" pattern - task number in group 1
+            (r"task\s+(\d+)\s+(done|completed|finished)", 1),       # Handle "task 1 done" pattern - task number in group 1
+            (r"task\s+#?(\d+)\s+(done|completed|finished)", 1),     # Handle "task #1 done" or "task 1 done" pattern - task number in group 1
+            (r"(done|complete|finished|completed)\s+(.*)", 2),      # Handle "done task_name" pattern - task name in group 2
+            (r"mark\s+(.*)\s+(done|complete|finished)", 1),         # Handle "mark task_name done" pattern - task name in group 1
+        ]
+
+        # Check if any complete pattern matches
+        potential_matches = []
+        for pattern, target_group in complete_patterns:
+            match = re.search(pattern, message_lower)
+            if match:
+                # Extract the task identifier from the appropriate group
+                task_identifier = match.group(target_group)
+                potential_matches.append((task_identifier, pattern))
+
+                # Try to extract task ID or title
+                task_id = self._extract_task_id(task_identifier, user_id)
+                if task_id:
+                    return "complete_task", {"user_id": user_id, "task_id": task_id}
+                # If task_id is not found, continue to try other patterns
+
+        # If a complete pattern matched but no valid task was found, return clarification based on the first match
+        if potential_matches:
+            first_task_identifier, first_pattern = potential_matches[0]
+            try:
+                int(first_task_identifier.strip())
+                # If it's a number but not found, it might be a missing task
+                return "ask_for_clarification", {"message": f"I couldn't find a task matching '{first_task_identifier}'. Could you specify which task you want to complete?"}
+            except ValueError:
+                # If it's not a number, it might be a title that doesn't match
+                return "ask_for_clarification", {"message": f"I couldn't find a task matching '{first_task_identifier}'. Could you specify which task you want to complete?"}
+
+        # Delete task intent
+        delete_patterns = [
+            (r"(delete|remove|cancel|get\s+rid\s+of)\s+(.*)", 2),  # Handle "delete task_name" - task name in group 2
+            (r"(delete|remove|cancel|get\s+rid\s+of)\s+task\s+(\d+)", 2),  # Handle "delete task 1" - task number in group 2
+            (r"(delete|remove|cancel|get\s+rid\s+of)\s+#(\d+)", 2),  # Handle "delete #1" - task number in group 2
+            (r"task\s+(\d+)\s+(delete|remove|cancel)", 1),  # Handle "task 1 delete" - task number in group 1
+        ]
+
+        # Check if any delete pattern matches
+        delete_potential_matches = []
+        for pattern, target_group in delete_patterns:
+            match = re.search(pattern, message_lower)
+            if match:
+                task_identifier = match.group(target_group).strip()
+                delete_potential_matches.append((task_identifier, pattern))
+
+                task_id = self._extract_task_id(task_identifier, user_id)
+                if task_id:
+                    return "delete_task", {"user_id": user_id, "task_id": task_id}
+                # If task_id is not found, continue to try other patterns
+
+        # If a delete pattern matched but no valid task was found, return clarification based on the first match
+        if delete_potential_matches:
+            first_task_identifier, first_pattern = delete_potential_matches[0]
+            try:
+                int(first_task_identifier)
+                # If it's a number but not found, it might be a missing task
+                return "ask_for_clarification", {"message": f"I couldn't find a task matching '{first_task_identifier}'. Could you specify which task you want to delete?"}
+            except ValueError:
+                # If it's not a number, it might be a title that doesn't match
+                return "ask_for_clarification", {"message": f"I couldn't find a task matching '{first_task_identifier}'. Could you specify which task you want to delete?"}
+
+        # Menu command handling
+        if message_lower.strip().isdigit():
+            task_number = int(message_lower.strip())
+            # This is a task number selection, ask what to do with it
+            return "task_selection", {"user_id": user_id, "task_number": task_number}
+
+        # Update task intent
+        update_patterns = [r"(change|update|rename|edit|alter)\s+(.*)"]
+        for pattern in update_patterns:
+            match = re.search(pattern, message_lower)
+            if match:
+                task_description = match.group(2).strip()
+                # This is a simplified implementation - in reality, you'd need more sophisticated parsing
+                # to identify which task to update and what to change it to
+                return "ask_for_clarification", {"message": f"Please specify which task you want to update and what changes you'd like to make."}
+
+        # Check if message is a menu option (1, 2, 3, 4 followed by space and task number)
+        menu_pattern = r"^(1|2|3|4)\s+(\d+)$"
+        menu_match = re.match(menu_pattern, message_lower.strip())
+        if menu_match:
+            option = menu_match.group(1)
+            task_number = int(menu_match.group(2))
+
+            if option == "1":
+                # Complete task
+                return "complete_task_menu", {"user_id": user_id, "task_number": task_number}
+            elif option == "2":
+                # Mark as incomplete
+                return "incomplete_task_menu", {"user_id": user_id, "task_number": task_number}
+            elif option == "3":
+                # Edit task
+                return "edit_task_menu", {"user_id": user_id, "task_number": task_number}
+            elif option == "4":
+                # Delete task
+                return "delete_task_menu", {"user_id": user_id, "task_number": task_number}
+
+        # Default to unknown intent
+        return "unknown", {"user_id": user_id, "message": message}
+
+    def _extract_task_id(self, task_identifier: str, user_id: str) -> int:
+        """
+        Try to extract a task ID from the identifier (could be ID or title).
+        """
+        # First, try to parse as a number (task ID)
+        task_identifier_clean = task_identifier.strip()
+        try:
+            task_id = int(task_identifier_clean)
+            # Verify the task belongs to the user
+            from ..models.chat_task import ChatTask
+            from sqlmodel import select
+            task = self.session.exec(select(ChatTask).where(
+                ChatTask.id == task_id,
+                ChatTask.user_id == user_id
+            )).first()
+            if task:
+                return task_id
+        except ValueError:
+            pass
+
+        # If not a number, try to match by title (partial match)
+        from ..models.chat_task import ChatTask
+        from sqlmodel import select
+        tasks = self.session.exec(select(ChatTask).where(
+            ChatTask.user_id == user_id
+        )).all()
+
+        # Find task with title that contains the identifier
+        for task in tasks:
+            if task_identifier_clean.lower() in task.title.lower():
+                return task.id
+
+        # If no match found, return None
+        return None
+
+    def _handle_add_task(self, params: Dict[str, Any]) -> str:
+        """
+        Handle adding a new task.
+        """
+        try:
+            tool = self.mcp_server.get_tool("add_task")
+            result = tool(self.session, **params)
+            return f"I've added the task '{result['title']}' to your list. Is there anything else I can help you with?"
+        except Exception as e:
+            return f"I couldn't add that task: {str(e)}"
+
+    def _handle_list_tasks(self, params: Dict[str, Any]) -> str:
+        """
+        Handle listing tasks.
+        """
+        try:
+            tool = self.mcp_server.get_tool("list_tasks")
+            result = tool(self.session, **params)
+            tasks = result["tasks"]
+
+            if not tasks:
+                status_text = params.get("status", "all")
+                return f"You don't have any {status_text} tasks right now."
+
+            # Format the task list
+            task_list = []
+            for i, task in enumerate(tasks, 1):
+                status = "[x]" if task["completed"] else "[ ]"
+                task_list.append(f"{i}. {status} {task['title']}")
+
+            status_text = params.get("status", "all")
+            return f"Here are your {status_text} tasks:\n" + "\n".join(task_list)
+        except Exception as e:
+            return f"I couldn't retrieve your tasks: {str(e)}"
+
+    def _handle_complete_task(self, params: Dict[str, Any]) -> str:
+        """
+        Handle completing a task.
+        """
+        try:
+            tool = self.mcp_server.get_tool("complete_task")
+            result = tool(self.session, **params)
+            return f"Great! I've marked '{result['title']}' as completed. You have {self._get_pending_count(params['user_id'])} tasks remaining."
+        except Exception as e:
+            return f"I couldn't complete that task: {str(e)}"
+
+    def _handle_delete_task(self, params: Dict[str, Any]) -> str:
+        """
+        Handle deleting a task.
+        """
+        try:
+            tool = self.mcp_server.get_tool("delete_task")
+            result = tool(self.session, **params)
+            return f"I've removed the task '{result['title']}' from your list."
+        except Exception as e:
+            return f"I couldn't delete that task: {str(e)}"
+
+    def _handle_update_task(self, params: Dict[str, Any]) -> str:
+        """
+        Handle updating a task.
+        """
+        try:
+            tool = self.mcp_server.get_tool("update_task")
+            result = tool(self.session, **params)
+            return f"I've updated the task to '{result['title']}'."
+        except Exception as e:
+            return f"I couldn't update that task: {str(e)}"
+
+    def _get_pending_count(self, user_id: str) -> int:
+        """
+        Get the count of pending tasks for a user.
+        """
+        from ..models.chat_task import ChatTask
+        from sqlmodel import select
+        pending_tasks = self.session.exec(
+            select(ChatTask)
+            .where(ChatTask.user_id == user_id, ChatTask.completed == False)
+        ).all()
+        return len(pending_tasks)
+
+    def _handle_task_selection(self, params: Dict[str, Any]) -> str:
+        """
+        Handle task selection and prompt for action.
+        """
+        task_number = params["task_number"]
+        user_id = params["user_id"]
+
+        # Get all tasks for the user
+        from ..models.chat_task import ChatTask
+        from sqlmodel import select
+        tasks = self.session.exec(
+            select(ChatTask)
+            .where(ChatTask.user_id == user_id)
+        ).all()
+
+        # Find the task with the specified number (index)
+        if 1 <= task_number <= len(tasks):
+            task = tasks[task_number - 1]  # Convert to 0-based index
+            return f"You selected task #{task_number}: '{task.title}'. What would you like to do?\n\n1. Complete task\n2. Mark as incomplete\n3. Edit task\n4. Delete task\n\nPlease enter option (1-4) followed by task number (e.g., '1 {task_number}' to complete)"
+        else:
+            return f"Task #{task_number} not found. You have {len(tasks)} tasks. Please select a valid task number."
+
+    def _handle_complete_task_menu(self, params: Dict[str, Any]) -> str:
+        """
+        Handle completing a task via menu selection.
+        """
+        task_number = params["task_number"]
+        user_id = params["user_id"]
+
+        # Get all tasks for the user
+        from ..models.chat_task import ChatTask
+        from sqlmodel import select
+        tasks = self.session.exec(
+            select(ChatTask)
+            .where(ChatTask.user_id == user_id)
+        ).all()
+
+        # Find the task with the specified number (index)
+        if 1 <= task_number <= len(tasks):
+            task = tasks[task_number - 1]  # Convert to 0-based index
+
+            # Call the complete_task tool with the actual task ID
+            try:
+                tool = self.mcp_server.get_tool("complete_task")
+                result = tool(self.session, user_id=user_id, task_id=task.id)
+                return f"Great! I've marked task #{task_number} '{result['title']}' as completed. You have {self._get_pending_count(user_id)} tasks remaining."
+            except Exception as e:
+                return f"I couldn't complete that task: {str(e)}"
+        else:
+            return f"Task #{task_number} not found. You have {len(tasks)} tasks. Please select a valid task number."
+
+    def _handle_incomplete_task_menu(self, params: Dict[str, Any]) -> str:
+        """
+        Handle marking a task as incomplete via menu selection.
+        """
+        task_number = params["task_number"]
+        user_id = params["user_id"]
+
+        # Get all tasks for the user
+        from ..models.chat_task import ChatTask
+        from sqlmodel import select
+        tasks = self.session.exec(
+            select(ChatTask)
+            .where(ChatTask.user_id == user_id)
+        ).all()
+
+        # Find the task with the specified number (index)
+        if 1 <= task_number <= len(tasks):
+            task = tasks[task_number - 1]  # Convert to 0-based index
+
+            # Update the task to be incomplete
+            try:
+                from datetime import datetime
+                task.completed = False
+                task.updated_at = datetime.now()
+                self.session.add(task)
+                self.session.commit()
+
+                return f"Task #{task_number} '{task.title}' has been marked as incomplete."
+            except Exception as e:
+                return f"I couldn't update that task: {str(e)}"
+        else:
+            return f"Task #{task_number} not found. You have {len(tasks)} tasks. Please select a valid task number."
+
+    def _handle_edit_task_menu(self, params: Dict[str, Any]) -> str:
+        """
+        Handle editing a task via menu selection.
+        """
+        task_number = params["task_number"]
+        user_id = params["user_id"]
+
+        # Get all tasks for the user
+        from ..models.chat_task import ChatTask
+        from sqlmodel import select
+        tasks = self.session.exec(
+            select(ChatTask)
+            .where(ChatTask.user_id == user_id)
+        ).all()
+
+        # Find the task with the specified number (index)
+        if 1 <= task_number <= len(tasks):
+            task = tasks[task_number - 1]  # Convert to 0-based index
+            return f"You selected task #{task_number} to edit. Current title: '{task.title}'. Please provide the new title for this task."
+        else:
+            return f"Task #{task_number} not found. You have {len(tasks)} tasks. Please select a valid task number."
+
+    def _handle_delete_task_menu(self, params: Dict[str, Any]) -> str:
+        """
+        Handle deleting a task via menu selection.
+        """
+        task_number = params["task_number"]
+        user_id = params["user_id"]
+
+        # Get all tasks for the user
+        from ..models.chat_task import ChatTask
+        from sqlmodel import select
+        tasks = self.session.exec(
+            select(ChatTask)
+            .where(ChatTask.user_id == user_id)
+        ).all()
+
+        # Find the task with the specified number (index)
+        if 1 <= task_number <= len(tasks):
+            task = tasks[task_number - 1]  # Convert to 0-based index
+
+            # Call the delete_task tool with the actual task ID
+            try:
+                tool = self.mcp_server.get_tool("delete_task")
+                result = tool(self.session, user_id=user_id, task_id=task.id)
+                return f"I've removed task #{task_number} '{result['title']}' from your list."
+            except Exception as e:
+                return f"I couldn't delete that task: {str(e)}"
+        else:
+            return f"Task #{task_number} not found. You have {len(tasks)} tasks. Please select a valid task number."
+
+    def _handle_mark_incomplete(self, params: Dict[str, Any]) -> str:
+        """
+        Handle marking a task as incomplete.
+        """
+        try:
+            # We need to update the task status to incomplete using the regular Task model
+            from ..models.task import Task
+            from sqlmodel import select
+            task_id = params["task_id"]
+            user_id = params["user_id"]
+
+            # Get the task to verify it belongs to the user
+            task = self.session.get(Task, task_id)
+            if not task or str(task.user_id) != user_id:
+                return f"I couldn't find that task or it doesn't belong to you."
+
+            # Update the task to be incomplete
+            from datetime import datetime
+            task.completed = False
+            task.updated_at = datetime.now()
+            self.session.add(task)
+            self.session.commit()
+
+            return f"Task has been marked as incomplete."
+        except Exception as e:
+            return f"I couldn't update that task: {str(e)}"

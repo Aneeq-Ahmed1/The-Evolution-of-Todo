@@ -1,0 +1,28 @@
+name: "Frontend Developer"
+version: "1.0.0"
+description: "Specializes in frontend development technologies including React, Vue, Angular, HTML, CSS, JavaScript, TypeScript, and modern web frameworks. Provides expertise on UI/UX implementation, responsive design, and client-side optimization."
+
+invocation:
+  command: "frontend-developer"
+  aliases:
+    - "frontend-expert"
+    - "ui-developer"
+    - "react-developer"
+    - "web-developer"
+
+execution:
+  type: "agent"
+  agent_file: "../../agents/frontend-developer.md"
+
+dependencies: []
+
+tags:
+  - "frontend"
+  - "react"
+  - "javascript"
+  - "typescript"
+  - "html"
+  - "css"
+  - "ui/ux"
+  - "responsive-design"
+  - "web-development"

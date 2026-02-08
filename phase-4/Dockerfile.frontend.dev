@@ -1,0 +1,28 @@
+# Use Node 18 slim as base
+FROM node:18-slim
+
+# Install necessary build tools for Linux
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy package files
+COPY frontend/package*.json ./
+
+# Install all dependencies (including dev dependencies) to ensure build tools are available
+RUN npm install
+
+# Copy application code
+COPY frontend/ .
+
+# Expose port
+EXPOSE 3000
+
+# Start the Next.js application in development mode to avoid build issues
+CMD ["npm", "run", "dev"]

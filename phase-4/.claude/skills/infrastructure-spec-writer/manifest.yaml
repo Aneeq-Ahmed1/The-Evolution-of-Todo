@@ -1,0 +1,29 @@
+name: "Infrastructure Spec Writer"
+version: "1.0.0"
+description: "Specializes in writing clear, detailed, and production-ready infrastructure specifications for software systems. Translates business and technical requirements into well-structured infrastructure specs covering cloud architecture, networking, compute, storage, security, scalability, availability, and cost considerations."
+
+invocation:
+  command: "infrastructure-spec-writer"
+  aliases:
+    - "infra-spec"
+    - "infrastructure-spec"
+    - "cloud-arch"
+    - "infra-design"
+
+execution:
+  type: "agent"
+  agent_file: "../../agents/infrastructure-spec-writer.agent.yaml"
+
+dependencies: []
+
+tags:
+  - "infrastructure"
+  - "specification"
+  - "architecture"
+  - "cloud"
+  - "design"
+  - "aws"
+  - "azure"
+  - "gcp"
+  - "networking"
+  - "devops"

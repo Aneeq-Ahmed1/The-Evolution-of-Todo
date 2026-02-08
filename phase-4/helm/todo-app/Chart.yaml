@@ -1,0 +1,25 @@
+apiVersion: v2
+name: todo-app
+description: A Helm chart for deploying the Todo Full-Stack Web Application
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+keywords:
+  - todo
+  - task-management
+  - nextjs
+  - fastapi
+  - postgresql
+  - ai-chatbot
+
+home: https://github.com/your-org/todo-app
+sources:
+  - https://github.com/your-org/todo-app
+
+maintainers:
+  - name: Your Name
+    email: your-email@example.com
+
+annotations:
+  category: Infrastructure
