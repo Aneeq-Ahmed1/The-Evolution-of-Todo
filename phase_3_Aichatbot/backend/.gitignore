@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+env/
+venv/
+.venv/
+.venv-backend/
+.venv-frontend/
+.venv-*
+.ENV
+.venv/
+env/
+ENV/
+.ENV/
+
+# Virtual Environment
+.venv
+venv/
+ENV/
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Build
+build/
+dist/
+dist-frontend/
+dist-backend/
+*.egg
+*.egg-info/
+
+# Logs
+*.log
+logs/
+
+# Environment specific
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.db-journal
+
+# Coverage
+tests/.coverage*
+.coverage
+htmlcov/
+
+# Pytest
+.pytest_cache/
+pytest.xml
+
+# Next.js
+.next
+out/
+coverage/
+
+# Better Auth
+.auth/
+

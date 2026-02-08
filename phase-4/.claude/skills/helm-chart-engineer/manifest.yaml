@@ -1,0 +1,28 @@
+name: "Helm Chart Engineer"
+version: "1.0.0"
+description: "Specializes in creating, configuring, and managing Helm charts for Kubernetes applications. Assists with Helm chart development, template creation, value configurations, and deployment strategies."
+
+invocation:
+  command: "helm-chart-engineer"
+  aliases:
+    - "helm-engineer"
+    - "helm-chart"
+    - "k8s-helm"
+    - "chart-engineer"
+
+execution:
+  type: "agent"
+  agent_file: "../../agents/helm-chart-engineer.agent.yaml"
+
+dependencies: []
+
+tags:
+  - "helm"
+  - "kubernetes"
+  - "charts"
+  - "deployment"
+  - "templates"
+  - "k8s"
+  - "devops"
+  - "containerization"
+  - "packaging"

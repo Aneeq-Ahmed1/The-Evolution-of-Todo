@@ -1,0 +1,503 @@
+INFO:backend.src.auth.middleware:SECRET_KEY loaded: Yes
+INFO:     Started server process [16984]
+INFO:     Waiting for application startup.
+INFO:sqlalchemy.engine.Engine:select pg_catalog.version()
+INFO:sqlalchemy.engine.Engine:[raw sql] {}
+INFO:sqlalchemy.engine.Engine:select current_schema()
+INFO:sqlalchemy.engine.Engine:[raw sql] {}
+INFO:sqlalchemy.engine.Engine:show standard_conforming_strings
+INFO:sqlalchemy.engine.Engine:[raw sql] {}
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+INFO:sqlalchemy.engine.Engine:[generated in 0.00107s] {'table_name': 'conversation', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+INFO:sqlalchemy.engine.Engine:SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.2428s ago] {'table_name': 'message', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+INFO:sqlalchemy.engine.Engine:SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.3599s ago] {'table_name': 'chattask', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+INFO:sqlalchemy.engine.Engine:SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.4763s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+INFO:sqlalchemy.engine.Engine:SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.5931s ago] {'table_name': 'task', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:INSERT INTO conversation (user_id, created_at, updated_at) VALUES (%(user_id)s, %(created_at)s, %(updated_at)s) RETURNING conversation.id
+INFO:sqlalchemy.engine.Engine:[generated in 0.00067s] {'user_id': 'demo_user', 'created_at': datetime.datetime(2026, 1, 6, 14, 40, 20, 587878), 'updated_at': datetime.datetime(2026, 1, 6, 14, 40, 20, 587882)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id, conversation.user_id, conversation.created_at, conversation.updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[generated in 0.00185s] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:INSERT INTO message (user_id, conversation_id, role, content, created_at) VALUES (%(user_id)s, %(conversation_id)s, %(role)s, %(content)s, %(created_at)s) RETURNING message.id
+INFO:sqlalchemy.engine.Engine:[generated in 0.00068s] {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'user', 'content': 'Show me my pending tasks', 'created_at': datetime.datetime(2026, 1, 6, 14, 40, 21, 187449)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT chattask.title, chattask.description, chattask.completed, chattask.user_id, chattask.id, chattask.created_at, chattask.updated_at 
+FROM chattask 
+WHERE chattask.user_id = %(user_id_1)s AND chattask.completed = false ORDER BY chattask.created_at
+INFO:sqlalchemy.engine.Engine:[generated in 0.00065s] {'user_id_1': 'demo_user'}
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[generated in 0.00256s] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:INSERT INTO message (user_id, conversation_id, role, content, created_at) VALUES (%(user_id)s, %(conversation_id)s, %(role)s, %(content)s, %(created_at)s) RETURNING message.id
+INFO:sqlalchemy.engine.Engine:[cached since 0.6012s ago] {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'assistant', 'content': 'You have no tasks.', 'created_at': datetime.datetime(2026, 1, 6, 14, 40, 21, 786200)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.3533s ago] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[generated in 0.00098s] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:INSERT INTO message (user_id, conversation_id, role, content, created_at) VALUES (%(user_id)s, %(conversation_id)s, %(role)s, %(content)s, %(created_at)s) RETURNING message.id
+INFO:sqlalchemy.engine.Engine:[cached since 25.54s ago] {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'user', 'content': 'add books purchase and description is school books', 'created_at': datetime.datetime(2026, 1, 6, 14, 40, 46, 728524)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:INSERT INTO chattask (title, description, completed, user_id, created_at, updated_at) VALUES (%(title)s, %(description)s, %(completed)s, %(user_id)s, %(created_at)s, %(updated_at)s) RETURNING chattask.id
+INFO:sqlalchemy.engine.Engine:[generated in 0.00064s] {'title': 'books purchase and', 'description': 'is school books', 'completed': False, 'user_id': 'demo_user', 'created_at': datetime.datetime(2026, 1, 6, 14, 40, 46, 966258), 'updated_at': datetime.datetime(2026, 1, 6, 14, 40, 46, 966263)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT chattask.title, chattask.description, chattask.completed, chattask.user_id, chattask.id, chattask.created_at, chattask.updated_at 
+FROM chattask 
+WHERE chattask.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[generated in 0.00063s] {'pk_1': 4}
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 25.89s ago] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:INSERT INTO message (user_id, conversation_id, role, content, created_at) VALUES (%(user_id)s, %(conversation_id)s, %(role)s, %(content)s, %(created_at)s) RETURNING message.id
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 160: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 1462, in __call__
+    return self.main(*args, **kwargs)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 1383, in main
+    rv = self.invoke(ctx)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 1246, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 814, in invoke
+    return callback(*args, **kwargs)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\main.py", line 412, in main
+    run(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "C:\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Python313\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Python313\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Python313\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Python313\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\protocols\http\httptools_impl.py", line 401, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "N:\Documents\Sarfaraz\Generative AI\Latest Hackathon 2\hackathon_2\phase-03\backend\src\api\chat.py", line 105, in chat
+    session.commit()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 2028, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 1313, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 1288, in _prepare_impl
+    self.session.flush()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 4352, in flush
+    self._flush(objects)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 4448, in _flush
+    flush_context.execute()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1904, in _exec_single_context
+    self._log_info(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 190, in _log_info
+    self.engine.logger.info(message, *arg, **kw)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\log.py", line 159, in info
+    self.log(logging.INFO, msg, *args, **kwargs)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\log.py", line 210, in log
+    self.logger._log(level, msg, args, **kwargs)
+Message: '[%s] %r'
+Arguments: ('cached since 26.49s ago', {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'assistant', 'content': '\u2705 Task added: books purchase and\nDescription: is school books', 'created_at': datetime.datetime(2026, 1, 6, 14, 40, 47, 676381)})
+INFO:sqlalchemy.engine.Engine:[cached since 26.49s ago] {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'assistant', 'content': '\u2705 Task added: books purchase and\nDescription: is school books', 'created_at': datetime.datetime(2026, 1, 6, 14, 40, 47, 676381)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 26.86s ago] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 21.39s ago] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:INSERT INTO message (user_id, conversation_id, role, content, created_at) VALUES (%(user_id)s, %(conversation_id)s, %(role)s, %(content)s, %(created_at)s) RETURNING message.id
+INFO:sqlalchemy.engine.Engine:[cached since 46.94s ago] {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'user', 'content': 'show all tasks', 'created_at': datetime.datetime(2026, 1, 6, 14, 41, 8, 121731)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT chattask.title, chattask.description, chattask.completed, chattask.user_id, chattask.id, chattask.created_at, chattask.updated_at 
+FROM chattask 
+WHERE chattask.user_id = %(user_id_1)s ORDER BY chattask.created_at
+INFO:sqlalchemy.engine.Engine:[generated in 0.00128s] {'user_id_1': 'demo_user'}
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 46.92s ago] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:INSERT INTO message (user_id, conversation_id, role, content, created_at) VALUES (%(user_id)s, %(conversation_id)s, %(role)s, %(content)s, %(created_at)s) RETURNING message.id
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u25cb' in position 185: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 1462, in __call__
+    return self.main(*args, **kwargs)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 1383, in main
+    rv = self.invoke(ctx)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 1246, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 814, in invoke
+    return callback(*args, **kwargs)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\main.py", line 412, in main
+    run(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "C:\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Python313\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Python313\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Python313\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Python313\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\protocols\http\httptools_impl.py", line 401, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "N:\Documents\Sarfaraz\Generative AI\Latest Hackathon 2\hackathon_2\phase-03\backend\src\api\chat.py", line 105, in chat
+    session.commit()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 2028, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 1313, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 1288, in _prepare_impl
+    self.session.flush()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 4352, in flush
+    self._flush(objects)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 4448, in _flush
+    flush_context.execute()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1904, in _exec_single_context
+    self._log_info(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 190, in _log_info
+    self.engine.logger.info(message, *arg, **kw)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\log.py", line 159, in info
+    self.log(logging.INFO, msg, *args, **kwargs)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\log.py", line 210, in log
+    self.logger._log(level, msg, args, **kwargs)
+Message: '[%s] %r'
+Arguments: ('cached since 47.52s ago', {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'assistant', 'content': 'Here are your tasks:\n1. \u25cb books purchase and', 'created_at': datetime.datetime(2026, 1, 6, 14, 41, 8, 706654)})
+INFO:sqlalchemy.engine.Engine:[cached since 47.52s ago] {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'assistant', 'content': 'Here are your tasks:\n1. \u25cb books purchase and', 'created_at': datetime.datetime(2026, 1, 6, 14, 41, 8, 706654)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 47.3s ago] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 50.63s ago] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:INSERT INTO message (user_id, conversation_id, role, content, created_at) VALUES (%(user_id)s, %(conversation_id)s, %(role)s, %(content)s, %(created_at)s) RETURNING message.id
+INFO:sqlalchemy.engine.Engine:[cached since 76.17s ago] {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'user', 'content': 'show me description of task 1', 'created_at': datetime.datetime(2026, 1, 6, 14, 41, 37, 352785)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT chattask.title, chattask.description, chattask.completed, chattask.user_id, chattask.id, chattask.created_at, chattask.updated_at 
+FROM chattask 
+WHERE chattask.user_id = %(user_id_1)s ORDER BY chattask.created_at
+INFO:sqlalchemy.engine.Engine:[cached since 29.22s ago] {'user_id_1': 'demo_user'}
+INFO:sqlalchemy.engine.Engine:SELECT chattask.title, chattask.description, chattask.completed, chattask.user_id, chattask.id, chattask.created_at, chattask.updated_at 
+FROM chattask 
+WHERE chattask.user_id = %(user_id_1)s ORDER BY chattask.created_at
+INFO:sqlalchemy.engine.Engine:[cached since 29.45s ago] {'user_id_1': 'demo_user'}
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 76.27s ago] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:INSERT INTO message (user_id, conversation_id, role, content, created_at) VALUES (%(user_id)s, %(conversation_id)s, %(role)s, %(content)s, %(created_at)s) RETURNING message.id
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u25cb' in position 185: character maps to <undefined>
+Call stack:
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 1462, in __call__
+    return self.main(*args, **kwargs)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 1383, in main
+    rv = self.invoke(ctx)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 1246, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\click\core.py", line 814, in invoke
+    return callback(*args, **kwargs)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\main.py", line 412, in main
+    run(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "C:\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+  File "C:\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "C:\Python313\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "C:\Python313\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+  File "C:\Python313\Lib\asyncio\base_events.py", line 2050, in _run_once
+    handle._run()
+  File "C:\Python313\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\protocols\http\httptools_impl.py", line 401, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "N:\Documents\Sarfaraz\Generative AI\Latest Hackathon 2\hackathon_2\phase-03\backend\src\api\chat.py", line 105, in chat
+    session.commit()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 2028, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 1313, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 1288, in _prepare_impl
+    self.session.flush()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 4352, in flush
+    self._flush(objects)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\session.py", line 4448, in _flush
+    flush_context.execute()
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 1904, in _exec_single_context
+    self._log_info(
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\engine\base.py", line 190, in _log_info
+    self.engine.logger.info(message, *arg, **kw)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\log.py", line 159, in info
+    self.log(logging.INFO, msg, *args, **kwargs)
+  File "C:\Users\DELL i5 7th Gen Pro\AppData\Roaming\Python\Python313\site-packages\sqlalchemy\log.py", line 210, in log
+    self.logger._log(level, msg, args, **kwargs)
+Message: '[%s] %r'
+Arguments: ('cached since 76.87s ago', {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'assistant', 'content': 'Here are your tasks:\n1. \u25cb books purchase and', 'created_at': datetime.datetime(2026, 1, 6, 14, 41, 38, 52596)})
+INFO:sqlalchemy.engine.Engine:[cached since 76.87s ago] {'user_id': 'demo_user', 'conversation_id': 2, 'role': 'assistant', 'content': 'Here are your tasks:\n1. \u25cb books purchase and', 'created_at': datetime.datetime(2026, 1, 6, 14, 41, 38, 52596)}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT conversation.id AS conversation_id, conversation.user_id AS conversation_user_id, conversation.created_at AS conversation_created_at, conversation.updated_at AS conversation_updated_at 
+FROM conversation 
+WHERE conversation.id = %(pk_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 76.63s ago] {'pk_1': 2}
+INFO:sqlalchemy.engine.Engine:ROLLBACK

@@ -1,0 +1,28 @@
+name: "Application Expert"
+version: "1.0.0"
+description: "Provides expert guidance on application architecture, design patterns, best practices, and development methodologies. Offers insights on software engineering principles, code quality, and system design."
+
+invocation:
+  command: "application-expert"
+  aliases:
+    - "app-expert"
+    - "application-advisor"
+    - "app-architect"
+    - "software-expert"
+
+execution:
+  type: "agent"
+  agent_file: "../../agents/application-expert.md"
+
+dependencies: []
+
+tags:
+  - "application"
+  - "architecture"
+  - "design"
+  - "patterns"
+  - "best-practices"
+  - "software-engineering"
+  - "development"
+  - "code-quality"
+  - "system-design"
